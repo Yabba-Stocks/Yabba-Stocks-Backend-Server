@@ -40,4 +40,7 @@ urlpatterns = [
 
     # Account management endpoints.
     path("yabbastocks/accounts/", include("accounts.urls")),
+
+    # Account management endpoints.
+    path("yabbastocks/product/", include("product.urls")),
 ]
