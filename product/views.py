@@ -39,32 +39,38 @@ class ProductView(generics.CreateAPIView):
                     self.upload_assets, user_data.get("cover_image")
                 )
 
+                video_or_sound = executor.submit(
+                    self.upload_assets, user_data.get("video_or_sound")
+                )
+
                 # Wait for both uploads to complete
                 preview_url = preview.result()
                 cover_image_url = cover_image.result()
+                video_or_sound_url = video_or_sound.result()
             
-                if preview_url and cover_image_url:
+                if preview_url and cover_image_url and video_or_sound:
                     product = Product.objects.create(
                         user=authenticated_user,
                         preview=preview_url,
                         title=user_data.get("title"),
                         price=user_data.get("price"),
                         cover_image=cover_image_url,
-                        video_or_sound=user_data.get("video_or_sound")
+                        video_or_sound=video_or_sound
                     )
                     product.save()
                 else:
                     return Response(
-                        data="Image upload failed, please retry",
+                        data="File upload failed, please try again later.",
                         status=status.HTTP_400_BAD_REQUEST
                     )
             response_data = {
                 "status": "Success!",
-                "message": "Prodcut uoloaded successfully",
+                "message": "Product uoloaded successfully",
                 "id": serializer.data["id"],
                 "title": user_data.get("title"),
                 "preview": preview_url,
-                "cover_image": cover_image_url, 
+                "cover_image": cover_image_url,
+                "media_file": video_or_sound_url
             }
             return Response(data=response_data, status=status.HTTP_201_CREATED)
 
