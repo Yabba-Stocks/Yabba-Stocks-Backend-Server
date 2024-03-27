@@ -8,7 +8,9 @@ from .models import User
 class RegisterSerializer(serializers.ModelSerializer):
     """Serailizers for our User first time registration"""
 
-    confirm_password = serializers.CharField(max_length=68, min_length=6, write_only=True)
+    confirm_password = serializers.CharField(
+        max_length=68, min_length=6, write_only=True
+    )
 
     class Meta:
         model = User
@@ -43,6 +45,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
 
 class VerifyOTPSerializer(serializers.Serializer):
     otp = serializers.CharField()

@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,16 +14,30 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('preview', models.CharField(max_length=155, null=True)),
-                ('title', models.CharField(max_length=250, null=True)),
-                ('price', models.FloatField(null=True)),
-                ('story', models.TextField(null=True)),
-                ('cover_image', models.CharField(max_length=155, null=True)),
-                ('video_or_sound', models.CharField(max_length=155, null=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("preview", models.CharField(max_length=155, null=True)),
+                ("title", models.CharField(max_length=250, null=True)),
+                ("price", models.FloatField(null=True)),
+                ("story", models.TextField(null=True)),
+                ("cover_image", models.CharField(max_length=155, null=True)),
+                ("video_or_sound", models.CharField(max_length=155, null=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

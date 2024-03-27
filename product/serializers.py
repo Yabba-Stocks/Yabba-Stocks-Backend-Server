@@ -16,5 +16,5 @@ class ProductSerializers(serializers.Serializer):
             "price",
             "story",
             "cover_image",
-            "videp_or_sound"
+            "videp_or_sound",
         ]

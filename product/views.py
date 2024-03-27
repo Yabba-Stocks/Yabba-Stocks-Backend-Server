@@ -12,9 +12,7 @@ from cloudinary import uploader as cloud
 
 
 # In-projects imports.
-from .serializers import (
-    ProductSerializers
-)
+from .serializers import ProductSerializers
 from .models import Product
 
 
@@ -32,9 +30,7 @@ class ProductView(generics.CreateAPIView):
         if serializer.is_valid(raise_exception=True):
             with ThreadPoolExecutor() as executor:
                 # Submit files upload tasks to the thread pool.
-                preview = executor.submit(
-                    self.upload_assets, user_data.get("preview")
-                )
+                preview = executor.submit(self.upload_assets, user_data.get("preview"))
                 cover_image = executor.submit(
                     self.upload_assets, user_data.get("cover_image")
                 )
@@ -47,7 +43,7 @@ class ProductView(generics.CreateAPIView):
                 preview_url = preview.result()
                 cover_image_url = cover_image.result()
                 video_or_sound_url = video_or_sound.result()
-            
+
                 if preview_url and cover_image_url and video_or_sound:
                     product = Product.objects.create(
                         user=authenticated_user,
@@ -55,22 +51,23 @@ class ProductView(generics.CreateAPIView):
                         title=user_data.get("title"),
                         price=user_data.get("price"),
                         cover_image=cover_image_url,
-                        video_or_sound=video_or_sound
+                        video_or_sound=video_or_sound,
                     )
                     product.save()
                 else:
                     return Response(
                         data="File upload failed, please try again later.",
-                        status=status.HTTP_400_BAD_REQUEST
+                        status=status.HTTP_400_BAD_REQUEST,
                     )
             response_data = {
                 "status": "Success!",
                 "message": "Product uoloaded successfully",
                 "id": serializer.data["id"],
                 "title": user_data.get("title"),
+                "price": user_data.get("price"),
                 "preview": preview_url,
                 "cover_image": cover_image_url,
-                "media_file": video_or_sound_url
+                "media_file": video_or_sound_url,
             }
             return Response(data=response_data, status=status.HTTP_201_CREATED)
 
@@ -83,6 +80,7 @@ class RetrieveSingleProduct(generics.RetrieveAPIView):
     """
     RetrieveSingleProduct retrieves details of a single product.
     """
+
     queryset = Product.objects.all()
     serializer_class = ProductSerializers
 
@@ -102,6 +100,7 @@ class ListAllProducts(generics.ListAPIView):
     """
     ListAllProducts lists all the available product in the store.
     """
+
     serializer_class = ProductSerializers
 
     def list(self, request, *args, **kwargs):
@@ -116,5 +115,3 @@ class ListAllProducts(generics.ListAPIView):
         }
 
         return Response(data=response_data, status=status.HTTP_200_OK)
-    
-

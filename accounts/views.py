@@ -47,8 +47,10 @@ class Register(generics.GenericAPIView):
             serializer.save()
             # Create and send OTP.
             otp = otp_manager.create_otp(user_id=str(serializer.data["id"]))
-            msg = "Welcome to YabbaStocks! To verify your account, enter this {}.".format(
-                otp
+            msg = (
+                "Welcome to YabbaStocks! To verify your account, enter this {}.".format(
+                    otp
+                )
             )
             subject = "YabbaStocks - Verify your email"
             sender = config("EMAIL_HOST_USER")
@@ -239,10 +241,8 @@ class PasswordResendOTP(generics.GenericAPIView):
         if serializer.is_valid(raise_exception=True):
             # Generate otp.
             otp = otp_manager.create_otp(user_id=str(serializer.data["id"]))
-            msg = (
-                "To reset your password, please enter this One Time Password {}.".format(
-                    otp
-                )
+            msg = "To reset your password, please enter this One Time Password {}.".format(
+                otp
             )
 
             subject = "YabbaStocks - Reset your password"
@@ -358,7 +358,7 @@ class ResetPassword(generics.CreateAPIView):
                 data={"error": "User not found"},
                 status=status.HTTP_404_NOT_FOUND,
             )
-        
+
         if user_data["password"] != user_data["password2"]:
             return Response(
                 data={"error": "Passwords do not match!"},
@@ -373,7 +373,7 @@ class ResetPassword(generics.CreateAPIView):
         if user_token:
             token = RefreshToken(user_token)
             token.blacklist()
-        
+
         user.save()
 
         response = {"status": "Success!", "message": "Password reset successfully"}
